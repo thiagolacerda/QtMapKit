@@ -83,18 +83,18 @@ function appendMarker(name, latitude, longitude)
         animation: google.maps.Animation.DROP
     });
 
-     google.maps.event.addListener(marker, "click", function() {
-         var index = -1;
-         for (var key in markers)
-         {
-             if (markers[key] === marker)
-             {
-                 index = key;
-                 break;
-             }
-         }
-         qMapView.onMarkerClicked(index);
-     });
+    google.maps.event.addListener(marker, "click", function() {
+        var index = -1;
+        for (var key in markers)
+        {
+            if (markers[key] === marker)
+            {
+                index = key;
+                break;
+            }
+        }
+        qMapView.onMarkerClicked(index);
+    });
 
     markers[markerIndex] = marker;
     markerIndex++;
