@@ -236,6 +236,14 @@ void QMMapView::fitRegion(QMCoordinateRegion &region)
     d->evaluateJavaScript(js);
 }
 
+uint QMMapView::appendMarker(const QString& name, const QMCoordinate& point)
+{
+    Q_D(QMMapView);
+    QString js = QString("appendMarker(\"%1\", %2, %3);").arg(name, QString::number(point.latitude()),
+        QString::number(point.longitude()));
+    return d->evaluateJavaScript(js).toUInt();
+}
+
 void QMMapView::regionDidChangeTo(qreal north, qreal south,
                                   qreal east, qreal west)
 {
@@ -281,4 +289,9 @@ void QMMapView::cursorDidEnterTo(qreal latitude, qreal longitude)
 void QMMapView::cursorDidLeaveFrom(qreal latitude, qreal longitude)
 {
     emit cursorLeaved(QMCoordinate(latitude, longitude));
+}
+
+void QMMapView::onMarkerClicked(int index)
+{
+    emit markerClicked(index);
 }
