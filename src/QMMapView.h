@@ -60,9 +60,8 @@ public:
     void fitRegion(const QMCoordinateRegion &region);
     void addMarker(QMMarker *marker);
 
-    Q_INVOKABLE QObject *getMarker(const QString &key);
-
 protected:
+    Q_INVOKABLE QObject *getMarker(const QString &key);
     void resizeEvent(QResizeEvent *event);
 
 signals:
