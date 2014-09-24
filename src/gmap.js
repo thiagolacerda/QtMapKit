@@ -96,7 +96,7 @@ function getMarkerIcon(marker) {
 
     return {
         fillColor: marker.color,
-        scale: 10,
+        scale: 5,
         path: markerPath
     }
 }
