@@ -31,14 +31,14 @@ public:
     QMCoordinate(qreal latitude, qreal longitude);
     qreal latitude() const;
     qreal longitude() const;
-    void setLatitude(qreal latitude);
-    void setLongitude(qreal longitude);
+    void setLatitude(qreal);
+    void setLongitude(qreal);
 
     bool operator==(const QMCoordinate &other);
 
 private:
-    qreal _latitude;
-    qreal _longitude;
+    qreal m_latitude;
+    qreal m_longitude;
 };
 
 #endif // QMCOORDINATE_H

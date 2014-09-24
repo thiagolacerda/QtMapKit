@@ -26,26 +26,26 @@ class QMCoordinateRegion
 {
 public:
     QMCoordinateRegion();
-    QMCoordinateRegion(QMCoordinate southWest, QMCoordinate northEast);
+    QMCoordinateRegion(const QMCoordinate &southWest, const QMCoordinate &northEast);
     QMCoordinateRegion(qreal north, qreal south, qreal east, qreal west);
-    QMCoordinateRegion(QMCoordinate center, QMCoordinateSpan span);
+    QMCoordinateRegion(const QMCoordinate &center, const QMCoordinateSpan &span);
 
-    bool contains(QMCoordinate &point, bool proper = false) const;
-    bool intersects(QMCoordinateRegion &span) const;
+    bool contains(const QMCoordinate &point, bool proper = false) const;
+    bool intersects(const QMCoordinateRegion &region) const;
     bool isEmpty() const;
 
     void extend(const QMCoordinate &point);
-    void unite(const QMCoordinateRegion &other);
+    void unite(const QMCoordinateRegion &region);
 
     qreal east() const;
     qreal west() const;
     qreal north() const;
     qreal south() const;
 
-    void setEast(qreal value);
-    void setWest(qreal value);
-    void setNorth(qreal value);
-    void setSouth(qreal value);
+    void setEast(qreal east);
+    void setWest(qreal west);
+    void setNorth(qreal north);
+    void setSouth(qreal south);
 
     QMCoordinate southWest() const;
     QMCoordinate northEast() const;
@@ -55,13 +55,13 @@ public:
     QMCoordinate center() const;
     QMCoordinateSpan span() const;
 
-    bool operator ==(const QMCoordinateRegion &other);
+    bool operator==(const QMCoordinateRegion &other);
 
 private:
-    qreal _east;
-    qreal _west;
-    qreal _north;
-    qreal _south;
+    qreal m_east;
+    qreal m_west;
+    qreal m_north;
+    qreal m_south;
 };
 
 #endif // QMCOORDINATEREGION_H

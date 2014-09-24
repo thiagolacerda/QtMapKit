@@ -18,37 +18,40 @@
 
 #include "QMCoordinateSpan.h"
 
-QMCoordinateSpan::QMCoordinateSpan() : _latitudeDelta(0.0), _longitudeDelta(0.0)
+QMCoordinateSpan::QMCoordinateSpan()
+    : m_latitudeDelta(0.0)
+    , m_longitudeDelta(0.0)
 {
 }
 
-QMCoordinateSpan::QMCoordinateSpan(qreal latitudeDelta, qreal longitudeDelta) :
-    _latitudeDelta(latitudeDelta), _longitudeDelta(longitudeDelta)
+QMCoordinateSpan::QMCoordinateSpan(qreal latitudeDelta, qreal longitudeDelta)
+    : m_latitudeDelta(latitudeDelta)
+    , m_longitudeDelta(longitudeDelta)
 {
 }
 
 qreal QMCoordinateSpan::latitudeDelta() const
 {
-    return _latitudeDelta;
+    return m_latitudeDelta;
 }
 
 void QMCoordinateSpan::setLatitudeDelta(qreal latitudeDelta)
 {
-    _latitudeDelta = latitudeDelta;
+    m_latitudeDelta = latitudeDelta;
 }
 
 qreal QMCoordinateSpan::longitudeDelta() const
 {
-    return _longitudeDelta;
+    return m_longitudeDelta;
 }
 
 void QMCoordinateSpan::setLongitudeDelta(qreal longitudeDelta)
 {
-    _longitudeDelta = longitudeDelta;
+    m_longitudeDelta = longitudeDelta;
 }
 
 bool QMCoordinateSpan::operator==(const QMCoordinateSpan &other)
 {
     return (latitudeDelta() == other.latitudeDelta())
-           && (longitudeDelta() == other.longitudeDelta());
+        && (longitudeDelta() == other.longitudeDelta());
 }

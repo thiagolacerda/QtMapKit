@@ -1,8 +1,7 @@
 var map = null;
 var markers = {};
 
-function initialize(lng, lat, type, zoom)
-{
+function initialize(lng, lat, type, zoom) {
     var mapOptions = {
         'center': new google.maps.LatLng(lat, lng),
         'mapTypeId': type,
@@ -73,8 +72,7 @@ function initialize(lng, lat, type, zoom)
     });
 }
 
-function getMarkerIcon(marker)
-{
+function getMarkerIcon(marker) {
     var markerPath;
     switch(marker.type) {
     case 1:
@@ -103,8 +101,7 @@ function getMarkerIcon(marker)
     }
 }
 
-function addMarker(key)
-{
+function addMarker(key) {
     var nativeMarker = qMapView.getMarker(key);
     var marker = new google.maps.Marker({
         position: new google.maps.LatLng(nativeMarker.latitude, nativeMarker.longitude),
@@ -115,10 +112,8 @@ function addMarker(key)
     });
 
     google.maps.event.addListener(marker, 'click', function() {
-        for (var key in markers)
-        {
-            if (markers[key] === marker)
-            {
+        for (var key in markers) {
+            if (markers[key] === marker) {
                 qMapView.onMarkerClicked(key);
                 return;
             }
@@ -128,8 +123,7 @@ function addMarker(key)
     markers[nativeMarker.id] = marker;
 }
 
-function getMapBounds()
-{
+function getMapBounds() {
     var bounds = map.getBounds();
     var ne = bounds.getNorthEast();
     var sw = bounds.getSouthWest();
@@ -141,8 +135,7 @@ function getMapBounds()
     };
 }
 
-function getMapCenter()
-{
+function getMapCenter() {
     var center = map.getCenter();
     return {
         'latitude': center.lat(),
@@ -150,8 +143,7 @@ function getMapCenter()
     }
 }
 
-function setMapCenter(lat, lng, animated)
-{
+function setMapCenter(lat, lng, animated) {
     var latlng = new google.maps.LatLng(lat, lng);
     if (animated)
         map.panTo(latlng);
@@ -159,19 +151,16 @@ function setMapCenter(lat, lng, animated)
         map.setCenter(latlng);
 }
 
-function boundsFromCoordinates(north, south, east, west)
-{
+function boundsFromCoordinates(north, south, east, west) {
     var ne = new google.maps.LatLng(north, east);
     var sw = new google.maps.LatLng(south, west);
     return new google.maps.LatLngBounds(sw, ne);
 }
 
-function panMapToBounds(north, south, east, west)
-{
+function panMapToBounds(north, south, east, west) {
     map.panToBounds(boundsFromCoordinates(north, south, east, west));
 }
 
-function fitMapToBounds(north, south, east, west)
-{
+function fitMapToBounds(north, south, east, west) {
     map.fitBounds(boundsFromCoordinates(north, south, east, west));
 }

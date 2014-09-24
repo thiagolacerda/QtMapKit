@@ -19,36 +19,39 @@
 #include "QMCoordinateRegion.h"
 #include <QtDebug>
 
-QMCoordinateRegion::QMCoordinateRegion() :
-    _east(0.0), _west(0.0), _north(0.0), _south(0.0)
+QMCoordinateRegion::QMCoordinateRegion()
+    : m_east(0.0)
+    , m_west(0.0)
+    , m_north(0.0)
+    , m_south(0.0)
 {
 }
 
-QMCoordinateRegion::QMCoordinateRegion(QMCoordinate southWest,
-                                       QMCoordinate northEast) :
-    _east(northEast.longitude()),
-    _west(southWest.longitude()),
-    _north(northEast.latitude()),
-    _south(southWest.latitude())
+QMCoordinateRegion::QMCoordinateRegion(const QMCoordinate &southWest, const QMCoordinate &northEast)
+    : m_east(northEast.longitude())
+    , m_west(southWest.longitude())
+    , m_north(northEast.latitude())
+    , m_south(southWest.latitude())
 {
 }
 
-QMCoordinateRegion::QMCoordinateRegion(qreal north, qreal south,
-                                       qreal east, qreal west) :
-    _east(east), _west(west), _north(north), _south(south)
+QMCoordinateRegion::QMCoordinateRegion(qreal north, qreal south, qreal east, qreal west)
+    : m_east(east)
+    , m_west(west)
+    , m_north(north)
+    , m_south(south)
 {
 }
 
-QMCoordinateRegion::QMCoordinateRegion(QMCoordinate center,
-                                       QMCoordinateSpan span) :
-    _east(center.longitude() + span.longitudeDelta() / 2),
-    _west(center.longitude() - span.longitudeDelta() / 2),
-    _north(center.latitude() + span.latitudeDelta() / 2),
-    _south(center.latitude() - span.latitudeDelta() / 2)
+QMCoordinateRegion::QMCoordinateRegion(const QMCoordinate &center, const QMCoordinateSpan &span)
+    : m_east(center.longitude() + span.longitudeDelta() / 2)
+    , m_west(center.longitude() - span.longitudeDelta() / 2)
+    , m_north(center.latitude() + span.latitudeDelta() / 2)
+    , m_south(center.latitude() - span.latitudeDelta() / 2)
 {
 }
 
-bool QMCoordinateRegion::contains(QMCoordinate &point, bool proper) const
+bool QMCoordinateRegion::contains(const QMCoordinate &point, bool proper) const
 {
     qreal lng = point.longitude();
     qreal lat = point.latitude();
@@ -62,9 +65,9 @@ bool QMCoordinateRegion::contains(QMCoordinate &point, bool proper) const
     return r;
 }
 
-bool QMCoordinateRegion::intersects(QMCoordinateRegion &span) const
+bool QMCoordinateRegion::intersects(const QMCoordinateRegion &region) const
 {
-    Q_UNUSED(span)
+    Q_UNUSED(region)
     qWarning("QMCoordinateRegion::intersects not implemented; false returned");
     return false;
 }
@@ -76,42 +79,42 @@ bool QMCoordinateRegion::isEmpty() const
 
 qreal QMCoordinateRegion::east() const
 {
-    return _east;
+    return m_east;
 }
 
 qreal QMCoordinateRegion::west() const
 {
-    return _west;
+    return m_west;
 }
 
 qreal QMCoordinateRegion::north() const
 {
-    return _north;
+    return m_north;
 }
 
 qreal QMCoordinateRegion::south() const
 {
-    return _south;
+    return m_south;
 }
 
-void QMCoordinateRegion::setEast(qreal value)
+void QMCoordinateRegion::setEast(qreal east)
 {
-    _east = value;
+    m_east = east;
 }
 
-void QMCoordinateRegion::setWest(qreal value)
+void QMCoordinateRegion::setWest(qreal west)
 {
-    _west = value;
+    m_west = west;
 }
 
-void QMCoordinateRegion::setNorth(qreal value)
+void QMCoordinateRegion::setNorth(qreal north)
 {
-    _north = value;
+    m_north = north;
 }
 
-void QMCoordinateRegion::setSouth(qreal value)
+void QMCoordinateRegion::setSouth(qreal south)
 {
-    _south = value;
+    m_south = south;
 }
 
 QMCoordinate QMCoordinateRegion::southWest() const
@@ -144,10 +147,8 @@ QMCoordinateSpan QMCoordinateRegion::span() const
     return QMCoordinateSpan(north() - south(), east() - west());
 }
 
-bool QMCoordinateRegion::operator ==(const QMCoordinateRegion &other)
+bool QMCoordinateRegion::operator==(const QMCoordinateRegion &other)
 {
-    return (east() == other.east())
-            && (west() == other.west())
-            && (north() == other.north())
-            && (south() == other.south());
+    return (east() == other.east()) && (west() == other.west()) && (north() == other.north())
+        && (south() == other.south());
 }

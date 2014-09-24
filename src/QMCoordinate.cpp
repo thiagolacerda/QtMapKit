@@ -18,37 +18,39 @@
 
 #include "QMCoordinate.h"
 
-QMCoordinate::QMCoordinate() : _latitude(0.0), _longitude(0.0)
+QMCoordinate::QMCoordinate()
+    : m_latitude(0.0)
+    , m_longitude(0.0)
 {
 }
 
-QMCoordinate::QMCoordinate(qreal latitude, qreal longitude) :
-    _latitude(latitude), _longitude(longitude)
+QMCoordinate::QMCoordinate(qreal latitude, qreal longitude)
+    : m_latitude(latitude)
+    , m_longitude(longitude)
 {
 }
 
 qreal QMCoordinate::latitude() const
 {
-    return _latitude;
+    return m_latitude;
 }
 
 void QMCoordinate::setLatitude(qreal latitude)
 {
-    _latitude = latitude;
+    m_latitude = latitude;
 }
 
 qreal QMCoordinate::longitude() const
 {
-    return _longitude;
+    return m_longitude;
 }
 
 void QMCoordinate::setLongitude(qreal longitude)
 {
-    _longitude = longitude;
+    m_longitude = longitude;
 }
 
-bool QMCoordinate::operator==(const QMCoordinate &other)
+bool QMCoordinate::operator==(const QMCoordinate& other)
 {
-    return (latitude() == other.latitude())
-           && (longitude() == other.longitude());
+    return (latitude() == other.latitude()) && (longitude() == other.longitude());
 }

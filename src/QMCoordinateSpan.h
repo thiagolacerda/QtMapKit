@@ -34,8 +34,8 @@ public:
     bool operator==(const QMCoordinateSpan &other);
 
 private:
-    qreal _latitudeDelta;
-    qreal _longitudeDelta;
+    qreal m_latitudeDelta;
+    qreal m_longitudeDelta;
 };
 
 #endif // QMCOORDINATESPAN_H

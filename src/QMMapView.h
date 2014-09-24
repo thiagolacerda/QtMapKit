@@ -40,7 +40,7 @@ public:
         Terrain
     };
 
-    QMMapView(MapType mapType, QMCoordinate center, uint zoomLevel,
+    QMMapView(MapType mapType, const QMCoordinate &center, uint zoomLevel,
               QWidget *parent = 0);
     MapType mapType() const;
 
@@ -53,44 +53,34 @@ public:
 
     void setMapType(MapType type);
 
-    void setCenter(QMCoordinate center, bool animated = true);
+    void setCenter(const QMCoordinate &center, bool animated = true);
     void setZoomLevel(uint zoom);
 
-    void makeRegionVisible(QMCoordinateRegion &region);
-    void fitRegion(QMCoordinateRegion &region);
+    void makeRegionVisible(const QMCoordinateRegion &region);
+    void fitRegion(const QMCoordinateRegion &region);
     void addMarker(QMMarker *marker);
 
     Q_INVOKABLE QObject *getMarker(const QString &key);
-//    void pan(int x, int y);
-//    void setHeading(qreal heading);
-//    void setTilt(qreal tile);
-
-//    ??? projection() const; get
-//    ??? streetView() const; get set
-//    QUrl draggableCursor(); get set
-//    QUrl draggingCursor(); get set
-//    bool useMapMarker() const; get set
 
 protected:
-    void resizeEvent(QResizeEvent *);
+    void resizeEvent(QResizeEvent *event);
 
 signals:
     void mapLoaded();
     void mapBecameIdle();
-    void regionChanged(QMCoordinateRegion region);
-    void centerChanged(QMCoordinate center);
-    void mouseClicked(QMCoordinate coordinate);
-    void mouseDoubleClicked(QMCoordinate coordinate);
-    void mouseRightClicked(QMCoordinate coordinate);
+    void regionChanged(const QMCoordinateRegion &region);
+    void centerChanged(const QMCoordinate &center);
+    void mouseClicked(const QMCoordinate &coordinate);
+    void mouseDoubleClicked(const QMCoordinate &coordinate);
+    void mouseRightClicked(const QMCoordinate &coordinate);
     void mouseDragged();
     void mouseDragStarted();
     void mouseDragEnded();
-    void cursorMoved(QMCoordinate coordinate);
-    void cursorEntered(QMCoordinate coordinate);
-    void cursorLeaved(QMCoordinate coordinate);
+    void cursorMoved(const QMCoordinate &coordinate);
+    void cursorEntered(const QMCoordinate &coordinate);
+    void cursorLeaved(const QMCoordinate &coordinate);
     void headingChanged();
     void mapTypeChanged(MapType type);
-//    void projectionChanged();
     void tilesLoaded();
     void tilesChanged();
     void zoomLevelChanged(uint level);
@@ -101,7 +91,7 @@ protected slots:
     void insertNativeObject();
     void regionDidChangeTo(qreal north, qreal south, qreal east, qreal west);
     void centerDidChangeTo(qreal latitude, qreal longitude);
-    void mapTypeDidChangeTo(QString typeString);
+    void mapTypeDidChangeTo(const QString &typeString);
     void mouseDidClickAt(qreal latitude, qreal longitude);
     void mouseDidDoubleClickAt(qreal latitude, qreal longitude);
     void mouseDidRightClickAt(qreal latitude, qreal longitude);

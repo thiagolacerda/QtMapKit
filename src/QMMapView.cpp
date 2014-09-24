@@ -28,14 +28,15 @@
 class CustomWebPage : public QWebPage
 {
     public:
-        CustomWebPage(QObject *parent = 0) : QWebPage(parent) {}
+        CustomWebPage(QObject *parent = 0)
+            : QWebPage(parent)
+        {}
 
     protected:
         void javaScriptConsoleMessage(const QString &message, int lineNumber,
-                                      const QString &sourceID)
+            const QString &sourceID)
         {
-            qDebug() << "JavaScript" << sourceID << "line" << lineNumber <<
-                        ":" << message;
+            qDebug() << "JavaScript" << sourceID << "line" << lineNumber << ":" << message;
         }
 };
 
@@ -44,7 +45,9 @@ class QMMapViewPrivate
     Q_DECLARE_PUBLIC(QMMapView)
 
 public:
-    QMMapViewPrivate(QMMapView *q) : q_ptr(q), loaded(false)
+    QMMapViewPrivate(QMMapView *q)
+        : q_ptr(q)
+        , loaded(false)
     {
         webView = new QWebView();
         webView->setPage(new CustomWebPage());
@@ -62,8 +65,7 @@ public:
     } initialValues;
 
     inline QWebFrame *frame() { return webView->page()->mainFrame(); }
-    inline QVariant evaluateJavaScript(const QString &script,
-                                       bool force = false)
+    inline QVariant evaluateJavaScript(const QString &script, bool force = false)
     {
         if (loaded || force)
             return frame()->evaluateJavaScript(script);
@@ -73,8 +75,7 @@ public:
     inline QString toJsMapType(QMMapView::MapType type)
     {
         QString typeName;
-        switch (type)
-        {
+        switch (type) {
         case QMMapView::Hybrid:
             typeName = "HYBRID";
             break;
@@ -92,11 +93,11 @@ public:
         }
         return QString("google.maps.MapTypeId.%1").arg(typeName);
     }
-    inline QMMapView::MapType fromJsMapType(QString &type)
+
+    inline QMMapView::MapType fromJsMapType(const QString &type)
     {
         static QHash<QString, QMMapView::MapType> types;
-        if (types.isEmpty())
-        {
+        if (types.isEmpty()) {
             types.insert("hybrid", QMMapView::Hybrid);
             types.insert("roadmap", QMMapView::RoadMap);
             types.insert("satellite", QMMapView::Satellite);
@@ -111,9 +112,9 @@ private:
     QHash<QString, QMMarker*> m_markers;
 };
 
-QMMapView::QMMapView(MapType mapType, QMCoordinate center, uint zoomLevel,
-                     QWidget *parent) :
-    QWidget(parent), d_ptr(new QMMapViewPrivate(this))
+QMMapView::QMMapView(MapType mapType, const QMCoordinate &center, uint zoomLevel, QWidget *parent)
+    : QWidget(parent)
+    , d_ptr(new QMMapViewPrivate(this))
 {
     Q_D(QMMapView);
 
@@ -124,10 +125,8 @@ QMMapView::QMMapView(MapType mapType, QMCoordinate center, uint zoomLevel,
     d->initialValues.centerCoordinate = center;
     d->initialValues.mapType = mapType;
     d->initialValues.zoomLevel = zoomLevel;
-    connect(d->frame(), SIGNAL(javaScriptWindowObjectCleared()),
-            this, SLOT(insertNativeObject()));
-    connect(d->webView, SIGNAL(loadFinished(bool)),
-            this, SLOT(initializeMap()));
+    connect(d->frame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(insertNativeObject()));
+    connect(d->webView, SIGNAL(loadFinished(bool)), this, SLOT(initializeMap()));
 }
 
 void QMMapView::insertNativeObject()
@@ -140,19 +139,18 @@ void QMMapView::initializeMap()
 {
     Q_D(QMMapView);
     QMCoordinate &center = d->initialValues.centerCoordinate;
-    QString js = QString("initialize(%1, %2, %3, %4);").arg(
-                QString::number(center.longitude()),
-                QString::number(center.latitude()),
-                d->toJsMapType(d->initialValues.mapType),
-                QString::number(d->initialValues.zoomLevel));
+    QString js = QString("initialize(%1, %2, %3, %4);").arg(QString::number(center.longitude()),
+        QString::number(center.latitude()), d->toJsMapType(d->initialValues.mapType),
+        QString::number(d->initialValues.zoomLevel));
     d->evaluateJavaScript(js, true);
 
     d->loaded = true;
     emit mapLoaded();
 }
 
-void QMMapView::resizeEvent(QResizeEvent *)
+void QMMapView::resizeEvent(QResizeEvent *event)
 {
+    Q_UNUSED(event);
     Q_D(QMMapView);
     d->evaluateJavaScript("google.maps.event.trigger(map, 'resize');");
 }
@@ -172,17 +170,14 @@ QMMapView::MapType QMMapView::mapType() const
 QMCoordinateRegion QMMapView::region() const
 {
     QVariantMap result = d_ptr->evaluateJavaScript("getMapBounds();").toMap();
-    return QMCoordinateRegion(QMCoordinate(result["south"].toReal(),
-                                           result["west"].toReal()),
-                              QMCoordinate(result["north"].toReal(),
-                                           result["east"].toReal()));
+    return QMCoordinateRegion(QMCoordinate(result["south"].toReal(), result["west"].toReal()),
+        QMCoordinate(result["north"].toReal(), result["east"].toReal()));
 }
 
 QMCoordinate QMMapView::center() const
 {
     QVariantMap result = d_ptr->evaluateJavaScript("getMapCenter();").toMap();
-    return QMCoordinate(result["latitude"].toReal(),
-                        result["longitude"].toReal());
+    return QMCoordinate(result["latitude"].toReal(), result["longitude"].toReal());
 }
 
 uint QMMapView::zoomLevel() const
@@ -208,13 +203,12 @@ void QMMapView::setMapType(MapType type)
     d->evaluateJavaScript(script);
 }
 
-void QMMapView::setCenter(QMCoordinate center, bool animated)
+void QMMapView::setCenter(const QMCoordinate &center, bool animated)
 {
     Q_D(QMMapView);
     QString format = QString("setMapCenter(%1, %2, %3);");
-    QString js = format.arg(QString::number(center.latitude()),
-                            QString::number(center.longitude()),
-                            animated ? "true" : "false");
+    QString js = format.arg(QString::number(center.latitude()), QString::number(center.longitude()),
+        animated ? "true" : "false");
     d->evaluateJavaScript(js);
 }
 
@@ -224,21 +218,19 @@ void QMMapView::setZoomLevel(uint zoom)
     d->evaluateJavaScript(QString("map.setZoom(%1);").arg(zoom));
 }
 
-void QMMapView::makeRegionVisible(QMCoordinateRegion &region)
+void QMMapView::makeRegionVisible(const QMCoordinateRegion &region)
 {
     Q_D(QMMapView);
     QString format = QString("panMapToBounds(%1, %2, %3, %4);");
-    QString js = format.arg(region.north(), region.south(),
-                            region.east(), region.west());
+    QString js = format.arg(region.north(), region.south(), region.east(), region.west());
     d->evaluateJavaScript(js);
 }
 
-void QMMapView::fitRegion(QMCoordinateRegion &region)
+void QMMapView::fitRegion(const QMCoordinateRegion &region)
 {
     Q_D(QMMapView);
     QString format = QString("fitMapToBounds(%1, %2, %3, %4);");
-    QString js = format.arg(region.north(), region.south(),
-                            region.east(), region.west());
+    QString js = format.arg(region.north(), region.south(), region.east(), region.west());
     d->evaluateJavaScript(js);
 }
 
@@ -250,14 +242,13 @@ void QMMapView::addMarker(QMMarker *marker)
     d->evaluateJavaScript(js);
 }
 
-QObject* QMMapView::getMarker(const QString& key)
+QObject* QMMapView::getMarker(const QString &key)
 {
     Q_D(QMMapView);
     return d->getMarker(key);
 }
 
-void QMMapView::regionDidChangeTo(qreal north, qreal south,
-                                  qreal east, qreal west)
+void QMMapView::regionDidChangeTo(qreal north, qreal south, qreal east, qreal west)
 {
     emit regionChanged(QMCoordinateRegion(north, south, east, west));
 }
@@ -267,7 +258,7 @@ void QMMapView::centerDidChangeTo(qreal latitude, qreal longitude)
     emit centerChanged(QMCoordinate(latitude, longitude));
 }
 
-void QMMapView::mapTypeDidChangeTo(QString typeString)
+void QMMapView::mapTypeDidChangeTo(const QString &typeString)
 {
     Q_D(QMMapView);
     emit mapTypeChanged(d->fromJsMapType(typeString));
