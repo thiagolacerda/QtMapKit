@@ -17,6 +17,7 @@
  *****************************************************************************/
 
 #include "QMMapView.h"
+#include "QMMarker.h"
 #include <QHBoxLayout>
 #include <QHash>
 #include <QVariantMap>
@@ -103,6 +104,11 @@ public:
         }
         return types.value(type, initialValues.mapType);
     }
+
+    QMMarker *getMarker(const QString &key) { return m_markers.value(key); }
+    void addMarker(QMMarker *marker) { m_markers.insert(marker->id(), marker); }
+private:
+    QHash<QString, QMMarker*> m_markers;
 };
 
 QMMapView::QMMapView(MapType mapType, QMCoordinate center, uint zoomLevel,
@@ -236,12 +242,18 @@ void QMMapView::fitRegion(QMCoordinateRegion &region)
     d->evaluateJavaScript(js);
 }
 
-uint QMMapView::appendMarker(const QString& name, const QMCoordinate& point)
+void QMMapView::addMarker(QMMarker *marker)
 {
     Q_D(QMMapView);
-    QString js = QString("appendMarker(\"%1\", %2, %3);").arg(name, QString::number(point.latitude()),
-        QString::number(point.longitude()));
-    return d->evaluateJavaScript(js).toUInt();
+    d->addMarker(marker);
+    QString js = QString("addMarker(\"%1\");").arg(marker->id());
+    d->evaluateJavaScript(js);
+}
+
+QObject* QMMapView::getMarker(const QString& key)
+{
+    Q_D(QMMapView);
+    return d->getMarker(key);
 }
 
 void QMMapView::regionDidChangeTo(qreal north, qreal south,
@@ -291,7 +303,7 @@ void QMMapView::cursorDidLeaveFrom(qreal latitude, qreal longitude)
     emit cursorLeaved(QMCoordinate(latitude, longitude));
 }
 
-void QMMapView::onMarkerClicked(int index)
+void QMMapView::onMarkerClicked(const QString &id)
 {
-    emit markerClicked(index);
+    emit markerClicked(id);
 }

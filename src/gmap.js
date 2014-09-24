@@ -1,6 +1,5 @@
 var map = null;
 var markers = {};
-var markerIndex = 0;
 
 function initialize(lng, lat, type, zoom)
 {
@@ -74,32 +73,59 @@ function initialize(lng, lat, type, zoom)
     });
 }
 
-function appendMarker(name, latitude, longitude)
+function getMarkerIcon(marker)
 {
+    var markerPath;
+    switch(marker.type) {
+    case 1:
+        markerPath = google.maps.SymbolPath.BACKWARD_CLOSED_ARROW;
+        break;
+    case 2:
+        markerPath = google.maps.SymbolPath.BACKWARD_OPEN_ARROW;
+        break;
+    case 3:
+        markerPath = google.maps.SymbolPath.CIRCLE;
+        break;
+    case 4:
+        markerPath = google.maps.SymbolPath.FORWARD_CLOSED_ARROW;
+        break;
+    case 5:
+        markerPath = google.maps.SymbolPath.FORWARD_OPEN_ARROW;
+        break;
+    default:
+        return null;
+    }
+
+    return {
+        fillColor: marker.color,
+        scale: 10,
+        path: markerPath
+    }
+}
+
+function addMarker(key)
+{
+    var nativeMarker = qMapView.getMarker(key);
     var marker = new google.maps.Marker({
-        position: new google.maps.LatLng(latitude, longitude),
+        position: new google.maps.LatLng(nativeMarker.latitude, nativeMarker.longitude),
         map: map,
-        title: name,
-        animation: google.maps.Animation.DROP
+        title: nativeMarker.name,
+        animation: google.maps.Animation.DROP,
+        icon: getMarkerIcon(nativeMarker)
     });
 
     google.maps.event.addListener(marker, 'click', function() {
-        var index = -1;
         for (var key in markers)
         {
             if (markers[key] === marker)
             {
-                index = key;
-                break;
+                qMapView.onMarkerClicked(key);
+                return;
             }
         }
-        qMapView.onMarkerClicked(index);
     });
 
-    markers[markerIndex] = marker;
-    markerIndex++;
-
-    return markerIndex - 1;
+    markers[nativeMarker.id] = marker;
 }
 
 function getMapBounds()

@@ -23,14 +23,16 @@ SOURCES += \
     QMMapView.cpp \
     QMCoordinate.cpp \
     QMCoordinateRegion.cpp \
-    QMCoordinateSpan.cpp
+    QMCoordinateSpan.cpp \
+    QMMarker.cpp
 
 HEADERS += QtMapKit.h\
     qtmapkit_global.h \
     QMMapView.h \
     QMCoordinate.h \
     QMCoordinateRegion.h \
-    QMCoordinateSpan.h
+    QMCoordinateSpan.h \
+    QMMarker.h
 
 unix:!symbian {
     maemo5 {

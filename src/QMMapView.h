@@ -23,7 +23,9 @@
 #include "QtMapKit.h"
 #include "QMCoordinate.h"
 #include "QMCoordinateRegion.h"
+
 class QMMapViewPrivate;
+class QMMarker;
 
 class QMMapView : public QWidget
 {
@@ -56,7 +58,9 @@ public:
 
     void makeRegionVisible(QMCoordinateRegion &region);
     void fitRegion(QMCoordinateRegion &region);
-    uint appendMarker(const QString& name, const QMCoordinate& point);
+    void addMarker(QMMarker *marker);
+
+    Q_INVOKABLE QObject *getMarker(const QString &key);
 //    void pan(int x, int y);
 //    void setHeading(qreal heading);
 //    void setTilt(qreal tile);
@@ -90,7 +94,7 @@ signals:
     void tilesLoaded();
     void tilesChanged();
     void zoomLevelChanged(uint level);
-    void markerClicked(uint);
+    void markerClicked(const QString &key);
 
 protected slots:
     void initializeMap();
@@ -104,7 +108,7 @@ protected slots:
     void cursorDidMoveTo(qreal latitude, qreal longitude);
     void cursorDidEnterTo(qreal latitude, qreal longitude);
     void cursorDidLeaveFrom(qreal latitude, qreal longitude);
-    void onMarkerClicked(int);
+    void onMarkerClicked(const QString &id);
 
 private:
     QMMapViewPrivate *d_ptr;
