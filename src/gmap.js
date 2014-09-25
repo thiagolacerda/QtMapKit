@@ -120,6 +120,14 @@ function addMarker(key) {
     markers[key] = marker;
 }
 
+function removeMarker(key) {
+    if (markers[key]) {
+        // Setting map to null removes the marker
+        markers[key].setMap(null);
+        delete markers[key];
+    }
+}
+
 function getMapBounds() {
     var bounds = map.getBounds();
     var ne = bounds.getNorthEast();

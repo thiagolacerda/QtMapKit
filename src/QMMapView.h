@@ -59,6 +59,9 @@ public:
     void makeRegionVisible(const QMCoordinateRegion &region);
     void fitRegion(const QMCoordinateRegion &region);
     void addMarker(QMMarker *marker);
+    // Caller must take care of cleaning the memory used by QMMarker when calling removeMarker
+    void removeMarker(QMMarker *marker);
+    QMMarker *removeMarker(const QString &id);
 
 protected:
     Q_INVOKABLE QObject *getMarker(const QString &key);

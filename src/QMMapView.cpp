@@ -108,6 +108,7 @@ public:
 
     QMMarker *getMarker(const QString &key) { return m_markers.value(key); }
     void addMarker(QMMarker *marker) { m_markers.insert(marker->id(), marker); }
+    QMMarker *removeMarker(const QString &key) { return m_markers.take(key); }
 private:
     QHash<QString, QMMarker*> m_markers;
 };
@@ -240,6 +241,23 @@ void QMMapView::addMarker(QMMarker *marker)
     d->addMarker(marker);
     QString js = QString("addMarker(\"%1\");").arg(marker->id());
     d->evaluateJavaScript(js);
+}
+
+void QMMapView::removeMarker(QMMarker *marker)
+{
+    if (!marker)
+        return;
+
+    Q_D(QMMapView);
+    d->removeMarker(marker->id());
+    d->evaluateJavaScript(QString("removeMarker(\"%1\");").arg(marker->id()));
+}
+
+QMMarker *QMMapView::removeMarker(const QString &id)
+{
+    Q_D(QMMapView);
+    d->evaluateJavaScript(QString("removeMarker(\"%1\");").arg(id));
+    return d->removeMarker(id);
 }
 
 QObject* QMMapView::getMarker(const QString &key)
