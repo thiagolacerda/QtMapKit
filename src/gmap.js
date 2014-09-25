@@ -111,16 +111,13 @@ function addMarker(key) {
         icon: getMarkerIcon(nativeMarker)
     });
 
+    // Added property to fast lookup this object
+    marker._id = key;
     google.maps.event.addListener(marker, 'click', function() {
-        for (var key in markers) {
-            if (markers[key] === marker) {
-                qMapView.onMarkerClicked(key);
-                return;
-            }
-        }
+        qMapView.onMarkerClicked(marker._id);
     });
 
-    markers[nativeMarker.id] = marker;
+    markers[key] = marker;
 }
 
 function getMapBounds() {
